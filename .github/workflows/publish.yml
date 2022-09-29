@@ -34,6 +34,7 @@ jobs:
         name: Publish to NPM 📦
         uses: JS-DevTools/npm-publish@v1
         with:
+          token: ${{ secrets.NPM_AUTH_TOKEN }}
           dry-run: true
           tag: next
           access: public
@@ -45,7 +46,7 @@ jobs:
         with:
           generateReleaseNotes: true
           prerelease: ${{ contains(steps.publish.outputs.type, '-') }}
-          token: ${{ secrets.YOUR_GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Output
         if: steps.publish.outputs.type != 'none'
