@@ -39,12 +39,14 @@ jobs:
           access: public
           check-version: true
 
-      - name: Release
       - if: steps.publish.outputs.type != 'none'
-      - uses: ncipollo/release-action@v1
+      - name: Release
+        uses: ncipollo/release-action@v1
         with:
           generateReleaseNotes: true
           prerelease: ${{ steps.publish.outputs.type.startsWith("pre") }}
           token: ${{ secrets.YOUR_GITHUB_TOKEN }}
-        run: |
-          echo "Version changed: ${{ steps.publish.outputs.old-version }} => ${{ steps.publish.outputs.version }}"
+
+      - if: steps.publish.outputs.type != 'none'
+      - run: |
+        echo "Version changed: ${{ steps.publish.outputs.old-version }} => ${{ steps.publish.outputs.version }}"
