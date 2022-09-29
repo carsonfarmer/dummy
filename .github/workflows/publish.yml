@@ -44,7 +44,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           generateReleaseNotes: true
-          prerelease: ${{ contains(steps.publish.outputs.type, "-") }}
+          prerelease: ${{ contains(steps.publish.outputs.type, '-') }}
           token: ${{ secrets.YOUR_GITHUB_TOKEN }}
 
       - name: Output
