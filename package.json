@@ -1,0 +1,24 @@
+{
+  "name": "dummy",
+  "version": "1.1.0-0",
+  "description": "Some dummy npm package",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carsonfarmer/dummy.git"
+  },
+  "keywords": [
+    "testing",
+    "dummy",
+    "javascript"
+  ],
+  "author": "Carson Farmer <carson.farmer@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/carsonfarmer/dummy/issues"
+  },
+  "homepage": "https://github.com/carsonfarmer/dummy#readme"
+}
