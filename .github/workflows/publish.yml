@@ -30,13 +30,24 @@ jobs:
       - name: Install 🔧
         run: npm install
 
+      - name: Get latest tag
+        id: latesttag
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+
+      - id: tag
+        uses: haya14busa/action-cond@v1
+        with:
+          cond: ${{ contains(steps.latesttag.outputs.tag, 'pre') }}
+          if_true: "latest"
+          if_false: "next"
+
       - id: publish
         name: Publish to NPM 📦
         uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_AUTH_TOKEN }}
           dry-run: true
-          tag: next
+          tag: ${{ steps.tag.outputs.value }}
           access: public
           check-version: true
 
@@ -46,7 +57,7 @@ jobs:
         with:
           tag: ${{ steps.publish.outputs.version }}
           generateReleaseNotes: true
-          prerelease: ${{ contains(steps.publish.outputs.type, '-') }}
+          prerelease: ${{ contains(steps.publish.outputs.type, 'pre') }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Output
