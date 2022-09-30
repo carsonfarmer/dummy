@@ -37,8 +37,8 @@ jobs:
         uses: haya14busa/action-cond@v1
         with:
           cond: ${{ contains(steps.tag.outputs.tag, '-') }}
-          if_true: "latest"
-          if_false: "next"
+          if_true: "next"
+          if_false: "latest"
 
       - name: Publish to NPM 📦
         id: publish
