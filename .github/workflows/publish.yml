@@ -46,11 +46,3 @@ jobs:
           generateReleaseNotes: true
           prerelease: ${{ contains(steps.publish.outputs.type, 'pre') }}
           token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Output
-        if: ${{ contains(steps.publish.outputs.type, 'pre') }}
-        run: |
-          echo "Version changed: ${{ steps.publish.outputs.old-version }} => ${{ steps.publish.outputs.version }}"
-          npm dist-tag add dummy@${{ steps.publish.outputs.version }} next
-        env:
-          NPM_API_TOKEN: ${{ secrets.NPM_API_TOKEN }}
