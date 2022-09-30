@@ -1,6 +1,6 @@
 {
   "name": "dummy",
-  "version": "2.1.2-2",
+  "version": "2.1.2-3",
   "description": "Some dummy npm package",
   "main": "index.js",
   "scripts": {
