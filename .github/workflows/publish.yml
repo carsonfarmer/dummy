@@ -1,8 +1,6 @@
 name: Publish
 on:
   push:
-    branches:
-      - main
     tags:
       - "*"
 jobs:
@@ -54,3 +52,5 @@ jobs:
         run: |
           echo "Version changed: ${{ steps.publish.outputs.old-version }} => ${{ steps.publish.outputs.version }}"
           npm dist-tag add dummy@${{ steps.publish.outputs.version }} next
+        env:
+          NPM_API_TOKEN: ${{ secrets.NPM_API_TOKEN }}
