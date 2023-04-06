@@ -62,7 +62,7 @@ jobs:
         if: steps.publish.outputs.type != 'none'
         uses: ncipollo/release-action@v1
         with:
-          tag: ${{ steps.publish.outputs.version }}
+          tag: ${{ github.event.inputs.release_version }}
           generateReleaseNotes: true
           prerelease: ${{ contains(steps.publish.outputs.type, 'pre') }}
           token: ${{ secrets.GITHUB_TOKEN }}
