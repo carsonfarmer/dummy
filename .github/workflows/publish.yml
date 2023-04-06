@@ -38,7 +38,7 @@ jobs:
             const tag = await github.rest.git.createTag({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              tag: github.event.inputs.release_version,
+              tag: ${{ github.event.inputs.release_version }},
               message: "New release",
               object: context.sha,
               type: "commit"
