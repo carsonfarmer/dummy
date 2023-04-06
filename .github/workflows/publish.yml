@@ -29,28 +29,18 @@ jobs:
         with:
           node-version: 18
 
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v5
         id: create-tag
         name: Create Signed Tag
         with:
           github-token: ${{secrets.TEXTILEIO_MACHINE_ACCESS_TOKEN}}
           script: |
-            const tag = await github.request('POST /repos/{owner}/{repo}/git/refs/tags', {
+            await github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              tag: '${{ github.event.inputs.release_version }}',
-              message: 'New release',
-              sha: context.sha,
-              object: context.sha,
               ref: 'refs/tags/${{ github.event.inputs.release_version }}',
-              type: "commit"
-            });
-            //await github.request('POST /repos/{owner}/{repo}/git/refs', {
-              //owner: context.repo.owner,
-              //repo: context.repo.repo,
-              //ref: 'refs/tags/${{ github.event.inputs.release_version }}',
-              //sha: tag.data.sha
-            //})
+              sha: context.sha
+            })
       - name: Update version in package.json
         id: version-bump
         uses: jaywcjlove/github-action-package@v1.3.0
