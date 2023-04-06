@@ -1,8 +1,10 @@
 name: Publish
 on:
   push:
+    branches:
+      - main
     tags:
-      - "*"
+      - "v*.*.*"
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -23,37 +25,34 @@ jobs:
       - name: Setup Node Environment ⬢
         uses: actions/setup-node@v1
         with:
-          node-version: 16
+          node-version: 18
+
+      - name: Update version in package.json
+        id: version-bump
+        uses: jaywcjlove/github-action-package@v1.3.0
+        with:
+          version: ${{ github.ref }}
 
       - name: Install 🔧
         run: npm install
 
-      - name: Get Latest Tag
-        id: tag
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-
-      - name: Conditional Tag
+      - name: Conditional
         id: cond
         uses: haya14busa/action-cond@v1
         with:
-          cond: ${{ contains(steps.tag.outputs.tag, '-') }}
+          cond: ${{ contains(github.ref, '-') }}
           if_true: "next"
           if_false: "latest"
-
-      - name: Publish to NPM 📦
-        id: publish
-        uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_AUTH_TOKEN }}
-          dry-run: true
-          tag: ${{ steps.cont.outputs.value }}
-          access: public
-          check-version: true
 
       - name: Release
         if: steps.publish.outputs.type != 'none'
         uses: ncipollo/release-action@v1
         with:
+          tag: ${{ steps.publish.outputs.version }}
+          generateReleaseNotes: true
+          prerelease: ${{ contains(steps.cond.outputs.value, 'next') }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
           tag: ${{ steps.publish.outputs.version }}
           generateReleaseNotes: true
           prerelease: ${{ contains(steps.publish.outputs.type, 'pre') }}
