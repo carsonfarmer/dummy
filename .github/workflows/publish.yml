@@ -40,15 +40,17 @@ jobs:
               repo: context.repo.repo,
               tag: '${{ github.event.inputs.release_version }}',
               message: 'New release',
+              sha: context.sha,
               object: context.sha,
+              ref: 'refs/tags/${{ github.event.inputs.release_version }}',
               type: "commit"
             });
-            await github.request('POST /repos/{owner}/{repo}/git/refs', {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: 'refs/tags/${{ github.event.inputs.release_version }}',
-              sha: tag.data.sha
-            })
+            //await github.request('POST /repos/{owner}/{repo}/git/refs', {
+              //owner: context.repo.owner,
+              //repo: context.repo.repo,
+              //ref: 'refs/tags/${{ github.event.inputs.release_version }}',
+              //sha: tag.data.sha
+            //})
       - name: Update version in package.json
         id: version-bump
         uses: jaywcjlove/github-action-package@v1.3.0
