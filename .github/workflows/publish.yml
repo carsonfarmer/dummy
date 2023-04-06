@@ -35,7 +35,7 @@ jobs:
         with:
           github-token: ${{secrets.TEXTILEIO_MACHINE_ACCESS_TOKEN}}
           script: |
-            const tag = await github.rest.git.createTag({
+            const tag = await github.request('POST /repos/{owner}/{repo}/git/tags', {
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag: '${{ github.event.inputs.release_version }}',
@@ -43,7 +43,7 @@ jobs:
               object: context.sha,
               type: "commit"
             });
-            await github.rest.git.createRef({
+            await github.request('POST /repos/{owner}/{repo}/git/refs', {
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: 'refs/tags/${{ github.event.inputs.release_version }}',
