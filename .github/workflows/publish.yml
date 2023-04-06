@@ -35,11 +35,19 @@ jobs:
         with:
           github-token: ${{secrets.TEXTILEIO_MACHINE_ACCESS_TOKEN}}
           script: |
-            github.rest.git.createRef({
+            const tag = await github.rest.git.createTag({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: 'refs/tags/tag_${{ github.event.inputs.release_version }}',
-              sha: context.sha
+              tag: github.event.inputs.release_version,
+              message: "New release",
+              object: context.sha,
+              type: "commit"
+            });
+            await github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{ github.event.inputs.release_version }}',
+              sha: tag.data.sha
             })
       - name: Update version in package.json
         id: version-bump
