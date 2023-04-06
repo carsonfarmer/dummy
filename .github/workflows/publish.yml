@@ -53,7 +53,3 @@ jobs:
           prerelease: ${{ contains(steps.cond.outputs.value, 'next') }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
-          tag: ${{ steps.publish.outputs.version }}
-          generateReleaseNotes: true
-          prerelease: ${{ contains(steps.publish.outputs.type, 'pre') }}
-          token: ${{ secrets.GITHUB_TOKEN }}
