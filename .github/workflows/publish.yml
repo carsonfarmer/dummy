@@ -1,10 +1,10 @@
 name: Publish
 on:
-  push:
-    branches:
-      - main
-    tags:
-      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: "Version of this release"
+        required: true
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -27,11 +27,23 @@ jobs:
         with:
           node-version: 18
 
+      - uses: actions/github-script@v6
+        id: create-tag
+        name: Create Signed Tag
+        with:
+          github-token: ${{secrets.TEXTILEIO_MACHINE_ACCESS_TOKEN}}
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/tag_${{ github.event.inputs.release_version }}',
+              sha: context.sha
+            })
       - name: Update version in package.json
         id: version-bump
         uses: jaywcjlove/github-action-package@v1.3.0
         with:
-          version: ${{ github.ref }}
+          version: ${{ github.event.inputs.release_version }}
 
       - name: Install 🔧
         run: npm install
@@ -40,7 +52,7 @@ jobs:
         id: cond
         uses: haya14busa/action-cond@v1
         with:
-          cond: ${{ contains(github.ref, '-') }}
+          cond: ${{ contains(github.event.inputs.release_version, '-') }}
           if_true: "next"
           if_false: "latest"
 
@@ -50,6 +62,5 @@ jobs:
         with:
           tag: ${{ steps.publish.outputs.version }}
           generateReleaseNotes: true
-          prerelease: ${{ contains(steps.cond.outputs.value, 'next') }}
+          prerelease: ${{ contains(steps.publish.outputs.type, 'pre') }}
           token: ${{ secrets.GITHUB_TOKEN }}
-
