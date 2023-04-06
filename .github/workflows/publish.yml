@@ -35,7 +35,7 @@ jobs:
         with:
           github-token: ${{secrets.TEXTILEIO_MACHINE_ACCESS_TOKEN}}
           script: |
-            const tag = await github.request('POST /repos/{owner}/{repo}/git/tags', {
+            const tag = await github.request('POST /repos/{owner}/{repo}/git/refs/tags', {
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag: '${{ github.event.inputs.release_version }}',
